@@ -1,13 +1,8 @@
-FROM phusion/baseimage
+FROM phusion/baseimage:0.9.13
 MAINTAINER Brian Prodoehl <bprodoehl@connectify.me>
 
 # Set correct environment variables.
 ENV HOME /root
-
-# Regenerate SSH host keys. baseimage-docker does not contain any, so you
-# have to do that yourself. You may also comment out this instruction; the
-# init system will auto-generate one during boot.
-RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
 
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
@@ -15,7 +10,7 @@ CMD ["/sbin/my_init"]
 RUN apt-get update
 RUN apt-get install -y gdebi-core
 
-RUN cd /tmp/ && curl -sL http://turnserver.open-sys.org/downloads/v4.1.1.1/turnserver-4.1.1.1-debian-wheezy-ubuntu-mint-x86-64bits.tar.gz | tar -xzv
+RUN cd /tmp/ && curl -sL http://turnserver.open-sys.org/downloads/v4.1.2.1/turnserver-4.1.2.1-debian-wheezy-ubuntu-mint-x86-64bits.tar.gz | tar -xzv
 
 RUN groupadd turnserver
 RUN useradd -g turnserver turnserver
