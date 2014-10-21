@@ -3,7 +3,7 @@ docker-turnserver
 
 A Docker container with the Coturn STUN and TURN server (https://code.google.com/p/coturn/)
 
-This is currently running v4.1.2.1.
+This is currently running v4.2.1.2.
 
 ```
 docker run -d --name=turnserver --restart="on-failure:10" --net=host -p 3478:3478 -p 3478:3478/udp bprodoehl/turnserver
