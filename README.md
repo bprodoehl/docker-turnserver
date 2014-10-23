@@ -14,3 +14,10 @@ This will use icanhazip (http://major.io/icanhazip-com-faq/) to determine your c
 ```
 docker run -d -e EXTERNAL_IP=1.2.3.4 --name=turnserver --restart="on-failure:10" --net=host -p 3478:3478 -p 3478:3478/udp bprodoehl/turnserver
 ```
+
+Environment Parameters
+-----------------
+* EXTERNAL_IP
+* PORT
+* LISTEN_ON_PUBLIC_IP
+* USE_IPV4

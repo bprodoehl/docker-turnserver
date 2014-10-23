@@ -2,7 +2,12 @@
 
 if [ -z $EXTERNAL_IP ]
 then
-    EXTERNAL_IP=`curl icanhazip.com 2> /dev/null`
+    if [ ! -z USE_IPV4 ]
+    then
+        EXTERNAL_IP=`curl -4 icanhazip.com 2> /dev/null`
+    else
+        EXTERNAL_IP=`curl icanhazip.com 2> /dev/null`
+    fi
 fi
 
 if [ -z $PORT ]
