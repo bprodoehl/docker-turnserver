@@ -14,6 +14,12 @@ if [ ! -e /tmp/turnserver.configured ]
 then
     echo external-ip=$EXTERNAL_IP > /etc/turnserver.conf
     echo listening-port=$PORT >> /etc/turnserver.conf
+
+    if [ ! -z $LISTEN_ON_PUBLIC_IP ]
+    then
+        echo listening-ip=$EXTERNAL_IP >> /etc/turnserver.conf
+    fi
+
     touch /tmp/turnserver.configured
 fi
 
