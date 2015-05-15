@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z $EXTERNAL_IP ]
+if [ -z $SKIP_AUTO_IP ] && [ -z $EXTERNAL_IP ]
 then
     if [ ! -z USE_IPV4 ]
     then
@@ -17,7 +17,10 @@ fi
 
 if [ ! -e /tmp/turnserver.configured ]
 then
-    echo external-ip=$EXTERNAL_IP > /etc/turnserver.conf
+    if [ -z $SKIP_AUTO_IP ]
+    then
+        echo external-ip=$EXTERNAL_IP > /etc/turnserver.conf
+    fi
     echo listening-port=$PORT >> /etc/turnserver.conf
 
     if [ ! -z $LISTEN_ON_PUBLIC_IP ]

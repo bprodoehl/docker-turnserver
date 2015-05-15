@@ -1,4 +1,4 @@
-FROM phusion/baseimage:0.9.15
+FROM phusion/baseimage:0.9.16
 MAINTAINER Brian Prodoehl <bprodoehl@connectify.me>
 
 # Set correct environment variables.
@@ -7,10 +7,11 @@ ENV HOME /root
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
 
-RUN apt-get update
+RUN apt-get update && apt-get dist-upgrade -y
 RUN apt-get install -y gdebi-core
 
-RUN cd /tmp/ && curl -sL http://turnserver.open-sys.org/downloads/v4.3.1.3/turnserver-4.3.1.3-debian-wheezy-ubuntu-mint-x86-64bits.tar.gz | tar -xzv
+ENV COTURN_VER 4.4.4.2
+RUN cd /tmp/ && curl -sL http://turnserver.open-sys.org/downloads/v${COTURN_VER}/turnserver-${COTURN_VER}-debian-wheezy-ubuntu-mint-x86-64bits.tar.gz | tar -xzv
 
 RUN groupadd turnserver
 RUN useradd -g turnserver turnserver
