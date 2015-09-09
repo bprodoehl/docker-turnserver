@@ -1,7 +1,7 @@
 docker-turnserver
 =================
 
-A Docker container with the Coturn STUN and TURN server (https://code.google.com/p/coturn/)
+A Docker container with the Coturn STUN and TURN server (https://github.com/coturn/coturn)
 
 This is currently running v4.4.5.3.
 
