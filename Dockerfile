@@ -1,4 +1,4 @@
-FROM phusion/baseimage:0.9.17
+FROM phusion/baseimage:0.9.18
 MAINTAINER Brian Prodoehl <bprodoehl@connectify.me>
 
 # Set correct environment variables.
