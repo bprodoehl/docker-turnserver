@@ -51,7 +51,7 @@ fi
 
 if [ ! -z $ENABLE_SQLITE ]
 then
-    echo userdb=/var/db/turndb.sqlite3 >> /etc/turnserver.conf
+    echo userdb=/var/lib/turn/turndb >> /etc/turnserver.conf
 fi
 
 if [ ! -z $ENABLE_MOBILITY ]
@@ -70,4 +70,4 @@ then
     echo realm=$REALM >> /etc/turnserver.conf
 fi
 
-exec /usr/bin/turnserver --no-cli >>/var/log/turnserver.log 2>&1
+exec /usr/bin/turnserver --no-cli -l stdout
