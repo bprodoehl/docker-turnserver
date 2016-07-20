@@ -72,6 +72,7 @@ fi
 
 if [ ! -z $STATIC_AUTH_SECRET ]
 then
+    echo lt-cred-mech >> /etc/turnserver.conf
     echo static-auth-secret=$STATIC_AUTH_SECRET >> /etc/turnserver.conf
 fi
 
