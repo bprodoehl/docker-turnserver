@@ -30,3 +30,4 @@ Environment Parameters
 * ENABLE_MOBILITY -- enable Mobility with ICE (MICE) specs support
 * USERNAME -- static username accounts for long term credentials mechanism, only work with PASSWORD
 * PASSWORD -- static  credential for long term credentials mechanism, only work with USERNAME
+* STATIC_AUTH_SECRET -- 'Static' authentication secret value (a string) for TURN REST API only. 
