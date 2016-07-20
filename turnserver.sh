@@ -70,4 +70,9 @@ then
     echo realm=$REALM >> /etc/turnserver.conf
 fi
 
+if [ ! -z $STATIC_AUTH_SECRET ]
+then
+    echo static-auth-secret=$STATIC_AUTH_SECRET >> /etc/turnserver.conf
+fi
+
 exec /usr/bin/turnserver --no-cli -l stdout
