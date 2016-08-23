@@ -34,14 +34,14 @@ fi
 
 if [ ! -z $ENABLE_SSL ]
 then
-    if [ ! -z $SSL_CRT_FILE]
+    if [ ! -z $SSL_CRT_FILE ]
     then
         echo cert=$SSL_CRT_FILE >> /etc/turnserver.conf
     else
         echo cert=/etc/cert/server.crt >> /etc/turnserver.conf
     fi
     
-    if [ ! -z $SSL_KEY_FILE]
+    if [ ! -z $SSL_KEY_FILE ]
     then
         echo pkey=$SSL_KEY_FILE >> /etc/turnserver.conf
     else
