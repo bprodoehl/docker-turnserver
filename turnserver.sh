@@ -76,4 +76,4 @@ then
     echo static-auth-secret=$STATIC_AUTH_SECRET >> /etc/turnserver.conf
 fi
 
-exec /usr/bin/turnserver -c /etc/turnserver.conf --no-cli -l stdout
+exec /usr/bin/turnserver -V -c /etc/turnserver.conf --no-cli -l stdout
