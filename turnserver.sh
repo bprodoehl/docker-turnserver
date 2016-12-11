@@ -2,7 +2,7 @@
 
 if [ -z $SKIP_AUTO_IP ] && [ -z $EXTERNAL_IP ]
 then
-    if [ ! -z USE_IPV4 ]
+    if [ ! -z $USE_IPV4 ]
     then
         EXTERNAL_IP=`curl -4 icanhazip.com 2> /dev/null`
     else
