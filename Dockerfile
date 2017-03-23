@@ -25,7 +25,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ## node 7.7
 RUN groupadd --gid 1000 node \
-  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+  && useradd --uid 9999 --gid node --shell /bin/bash --create-home node
 
 # gpg keys listed at https://github.com/nodejs/node#release-team
 RUN set -ex \
@@ -69,8 +69,10 @@ RUN set -ex \
   && chmod +x /usr/local/bin/yarn
 
 COPY package.json /root/.
-RUN npm install
+RUN cd /root && npm install
 
 RUN mkdir /etc/service/nodeserver
 ADD nodeserver.sh /etc/service/nodeserver/run
+RUN chmod +x /etc/service/nodeserver/run
 COPY . /root/
+
