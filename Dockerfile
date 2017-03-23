@@ -10,7 +10,7 @@ CMD ["/sbin/my_init"]
 RUN apt-get update && apt-get dist-upgrade -y
 RUN apt-get install -y gdebi-core
 
-ENV COTURN_VER 4.5.0.5
+ENV COTURN_VER 4.4.5.3
 RUN cd /tmp/ && curl -sL http://turnserver.open-sys.org/downloads/v${COTURN_VER}/turnserver-${COTURN_VER}-debian-wheezy-ubuntu-mint-x86-64bits.tar.gz | tar -xzv
 
 RUN groupadd turnserver
