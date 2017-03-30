@@ -31,4 +31,49 @@ then
     touch /tmp/turnserver.configured
 fi
 
-exec /usr/bin/turnserver --no-cli >>/var/log/turnserver.log 2>&1
+
+if [ ! -z $ENABLE_SSL ]
+then
+    if [ ! -z $SSL_CRT_FILE ]
+    then
+        echo cert=$SSL_CRT_FILE >> /etc/turnserver.conf
+    else
+        echo cert=/etc/cert/server.crt >> /etc/turnserver.conf
+    fi
+    
+    if [ ! -z $SSL_KEY_FILE ]
+    then
+        echo pkey=$SSL_KEY_FILE >> /etc/turnserver.conf
+    else
+        echo pkey=/etc/cert/server.key >> /etc/turnserver.conf
+    fi
+fi
+
+if [ ! -z $ENABLE_SQLITE ]
+then
+    echo userdb=/var/lib/turn/turndb >> /etc/turnserver.conf
+fi
+
+if [ ! -z $ENABLE_MOBILITY ]
+then
+    echo mobility >> /etc/turnserver.conf
+fi
+
+if [ ! -z $USERNAME ] && [ ! -z $PASSWORD ]
+then
+    echo lt-cred-mech >> /etc/turnserver.conf
+    echo user=$USERNAME:$PASSWORD >> /etc/turnserver.conf
+fi
+
+if [ ! -z $REALM ]
+then
+    echo realm=$REALM >> /etc/turnserver.conf
+fi
+
+if [ ! -z $STATIC_AUTH_SECRET ]
+then
+    echo lt-cred-mech >> /etc/turnserver.conf
+    echo static-auth-secret=$STATIC_AUTH_SECRET >> /etc/turnserver.conf
+fi
+
+exec /usr/bin/turnserver -c /etc/turnserver.conf --no-cli -l stdout
