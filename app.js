@@ -20,36 +20,47 @@ let ping = async (query)=> {
   }
 
   console.log(host,time);
-  const pingResult = await execPromise(`ping -i 2 -c ${time} ${host}`);
+  const pingResult = await execPromise(`ping -w 6 -c ${time} ${host}`);
 
   return pingResult;
 };
 
-function parsePingResult(output){
-  let reg1 = /PING ([\w\.]+) \(([\d\.]+)\): [\d]+ data bytes/g;
-  let reg2 = /(\d+) packets transmitted, (\d+) packets received, ([\d\.\%]+) packet loss/g;
-  let reg3 = /round-trip min\/avg\/max\/stddev = ([\d\.]+)\/([\d\.]+)\/([\d\.]+)\/3.124 ms/g
+function parsePingResult(output,ok){
+  let reg1 = /PING ([\w\.]+) \(([\d\.]+)\)/g;
+  let reg2 = /(\d+) packets transmitted, (\d+) received, ([\d\.\%]+) packet loss, time ([\d]+ms)/g;
+  let reg3 = /rtt min\/avg\/max\/mdev = ([\d\.]+)\/([\d\.]+)\/([\d\.]+)\/([\d\.]+) ms/g
 
   let r1 = reg1.exec(output);
   let r2 = reg2.exec(output);
 
 //  console.log(output);
-
-  return {
+  let result = {
+  	'alive':ok,
     'host':r1[1],
     'ip':r1[2],
     'packets_transmitted': r2[1],
     'packets_received': r2[2],
     'packet_loss': r2[3],
+    'time': r2[4],
     'output':output
+  };
+
+  if(ok){
+  	  let r3 = reg3.exec(output);
+  	  result['min'] = `${r3[1]}ms`
+  	  result['avg'] = `${r3[2]}ms`
+  	  result['max'] = `${r3[3]}ms`
+  	  result['mdev'] = `${r3[4]}ms`
   }
+
+  return result;
 }
 
 router.get('/', async(ctx,next)=>{
   if ( (ctx.request.url.indexOf("index.js.map") > -1) || (ctx.request.url.indexOf("favicon.ico") > -1) ){
     ctx.status = 404;
   }else{
-    const pingResult = await ping(ctx.request.query);
+    const [pingResult,ok] = await ping(ctx.request.query);
     ctx.body = pingResult;
   }
 });
@@ -59,26 +70,35 @@ router.get('/ping', async(ctx,next)=>{
 
   let query = ctx.request.query;
 
-  const pingResult = await ping(query);
+  const [pingResult,ok] = await ping(query);
 
-  ctx.body = parsePingResult(pingResult);
+  ctx.body = parsePingResult(pingResult,ok);
 });
 
 
 function execPromise(cmd) {
     return new Promise((y,n)=>{
         exec(cmd, (error, stdout, stderr) => {
+            let ok = true;
             if (error) {
-                n(stderr);
-                return;
+            	ok = false;
             }
 
-            y(stdout);
+            y([stdout,ok]);
 
         });
     });
 }
 
+app.use(async (ctx, next) => {
+  try {
+    await next();
+  } catch (err) {
+    ctx.status = err.status || 500;
+    ctx.body = err.message;
+    ctx.app.emit('error', err, ctx);
+  }
+});
 
 
 app.use(cors());
