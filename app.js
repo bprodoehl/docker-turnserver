@@ -20,7 +20,7 @@ let ping = async (query)=> {
   }
 
   console.log(host,time);
-  const pingResult = await execPromise(`ping -w 6 -c ${time} ${host}`);
+  const pingResult = await execPromise(`ping -W 6 -c ${time} ${host}`);
 
   return pingResult;
 };
