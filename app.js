@@ -8,7 +8,7 @@ const exec = require('child_process').exec;
 
 let ping = async (query)=> {
   let host = "127.0.0.1";
-  let time = 4;
+  let time = 5;
 
 
   if (query.host){
@@ -25,17 +25,17 @@ let ping = async (query)=> {
   return pingResult;
 };
 
-function parsePingResult(output,ok){
+function parsePingResult(output){
   let reg1 = /PING ([\w\.]+) \(([\d\.]+)\)/g;
   let reg2 = /(\d+) packets transmitted, (\d+) received, ([\d\.\%]+) packet loss, time ([\d]+ms)/g;
   let reg3 = /rtt min\/avg\/max\/mdev = ([\d\.]+)\/([\d\.]+)\/([\d\.]+)\/([\d\.]+) ms/g
 
   let r1 = reg1.exec(output);
   let r2 = reg2.exec(output);
+  let r3 = reg3.exec(output);
 
 //  console.log(output);
   let result = {
-  	'alive':ok,
     'host':r1[1],
     'ip':r1[2],
     'packets_transmitted': r2[1],
@@ -45,12 +45,14 @@ function parsePingResult(output,ok){
     'output':output
   };
 
-  if(ok){
-  	  let r3 = reg3.exec(output);
-  	  result['min'] = `${r3[1]}ms`
-  	  result['avg'] = `${r3[2]}ms`
-  	  result['max'] = `${r3[3]}ms`
-  	  result['mdev'] = `${r3[4]}ms`
+  if(r3 != null){
+    result['alive'] = true;
+    result['min'] = `${r3[1]}ms`;
+    result['avg'] = `${r3[2]}ms`;
+    result['max'] = `${r3[3]}ms`;
+    result['mdev'] = `${r3[4]}ms`;
+  }else{
+    result['alive'] = false;
   }
 
   return result;
@@ -60,7 +62,7 @@ router.get('/', async(ctx,next)=>{
   if ( (ctx.request.url.indexOf("index.js.map") > -1) || (ctx.request.url.indexOf("favicon.ico") > -1) ){
     ctx.status = 404;
   }else{
-    const [pingResult,ok] = await ping(ctx.request.query);
+    const pingResult = await ping(ctx.request.query);
     ctx.body = pingResult;
   }
 });
@@ -70,21 +72,20 @@ router.get('/ping', async(ctx,next)=>{
 
   let query = ctx.request.query;
 
-  const [pingResult,ok] = await ping(query);
+  const pingResult = await ping(query);
 
-  ctx.body = parsePingResult(pingResult,ok);
+  ctx.body = parsePingResult(pingResult);
 });
 
 
 function execPromise(cmd) {
     return new Promise((y,n)=>{
         exec(cmd, (error, stdout, stderr) => {
-            let ok = true;
             if (error) {
-            	ok = false;
+              //ignore
             }
 
-            y([stdout,ok]);
+            y(stdout);
 
         });
     });
