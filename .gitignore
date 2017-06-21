@@ -49,4 +49,4 @@ jspm_packages
 .yarn-integrity
 
 .idea
-
+venv
