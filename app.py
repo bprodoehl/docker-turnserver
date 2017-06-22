@@ -2,7 +2,7 @@ import re
 import asyncio
 import subprocess
 from sanic import Sanic
-from sanic.response import json
+from sanic.response import json, text
 from sanic.exceptions import NotFound
 
 app = Sanic()
