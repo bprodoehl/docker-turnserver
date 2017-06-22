@@ -3,6 +3,7 @@ import asyncio
 import subprocess
 from sanic import Sanic
 from sanic.response import json
+from sanic.exceptions import NotFound
 
 app = Sanic()
 
@@ -58,6 +59,12 @@ async def test(request, host):
         return json(res)
     else:
         return json({'error': res})
+
+
+@app.exception(NotFound)
+def ignore_404s(request, exception):
+    return text("Page Not Found.", status=404)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
